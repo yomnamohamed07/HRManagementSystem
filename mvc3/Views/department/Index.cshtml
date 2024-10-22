@@ -30,7 +30,7 @@
                 <td>@item.code</td>
                 <td>@item.name</td>
                 <td>@item.time</td>
-                    <partial name="_ButtonPartial" Model="@item.id">  </partial>
+                    <partial name="_ButtonPartial" Model="@item.id.ToString()">  </partial>
               
             </tr>
         }

@@ -13,13 +13,13 @@ namespace Business_acess_lyer.repositories
             
         }
 
-        public IEnumerable<employee> Getall(string name)
-        {
-           return _dbset.Where(e => e.name.ToLower().Contains(name.ToLower())).Include(e => e.department).ToList();
-        }
-       public IEnumerable<employee> getallwithdepartment()
-        {
-            return _dbset.Include(e => e.department).ToList();
-        }
+        public async Task<IEnumerable<employee>> Getallasync(string name)
+        
+         => await   _dbset.Where(e => e.name.ToLower().Contains(name.ToLower())).Include(e => e.department).ToListAsync ();
+        
+       public async Task< IEnumerable<employee>> getallwithdepartmentasync()
+        
+           => await _dbset.Include(e => e.department).ToListAsync();
+        
     }
 }

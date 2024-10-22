@@ -19,6 +19,6 @@ namespace Business_acess_lyer.repositories
         }
         public IEmployee_repositories employees => _emprepo.Value;
         public Idata_repositories data => _datatrepo.Value;
-        public int SaveChanges() => _context.SaveChanges();
+        public async  Task<int> SaveChangesasync() =>  await _context.SaveChangesAsync();
     }
 }

@@ -7,16 +7,18 @@ namespace mvc3.Controllers
 {
     public class departmentController : Controller
     {
-        //private readonly IGenericRepositories<department> repo;
-        private readonly Idata_repositories repo;
+		//private readonly IGenericRepositories<department> repo;
+		//_unitofwork
+		//private readonly IUnitofwork  repo;
+		private readonly Idata_repositories repo;
         public departmentController(Idata_repositories _repo)
         {
-            repo = _repo;
+		repo = _repo;
         }
         [HttpGet]
-        public IActionResult Index()
+        public  async Task<IActionResult> Index()
         {
-            var result = repo.Getall();
+            var result = await repo.Getallasync();
             return View(result);
         }
         public IActionResult Create()
@@ -24,19 +26,19 @@ namespace mvc3.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(department department)
+        public async Task< IActionResult >Create(department department)
         {
             if (!ModelState.IsValid) return View(department);
 
 
-        repo.create(department);
+          await  repo.createasync(department);
             return RedirectToAction(nameof(Index));
 
 
         }
-        public IActionResult details(int? id) => departmentcontrollerhandler(id, nameof(details));
+        public async Task<IActionResult> details(int? id) => await departmentcontrollerhandler(id, nameof(details));
 
-        public IActionResult Edit(int? id) => departmentcontrollerhandler(id, nameof(Edit));
+        public async  Task<IActionResult> Edit(int? id) =>  await departmentcontrollerhandler(id, nameof(Edit));
 
 
         [HttpPost]
@@ -67,15 +69,15 @@ namespace mvc3.Controllers
             }
 
         }
-        public IActionResult Delete(int? id) => departmentcontrollerhandler(id, nameof(Delete));
+        public async Task< IActionResult> Delete(int? id) =>  await departmentcontrollerhandler(id, nameof(Delete));
        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult ConfirmDelete(int? id)
+        public  async Task<IActionResult> ConfirmDelete(int? id)
         {
 
             if (!id.HasValue) { return BadRequest(); }
-            var repo1 = repo.Get(id.Value);
+            var repo1 =  await repo.Getasync(id.Value);
             if (repo1 is null) { return NotFound(); }
             else
             {
@@ -98,7 +100,7 @@ namespace mvc3.Controllers
             }
 
         }
-        private IActionResult departmentcontrollerhandler(int? id ,string viewname)
+        private async Task<IActionResult> departmentcontrollerhandler(int? id ,string viewname)
         {
             if (!id.HasValue)
             {
@@ -106,7 +108,7 @@ namespace mvc3.Controllers
             }
             else
             {
-                var department = repo.Get(id.Value);
+                var department =  await repo.Getasync(id.Value);
                 if (department is null)
                 {
                     return NotFound();

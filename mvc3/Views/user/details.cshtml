@@ -1,0 +1,16 @@
+﻿@using mvc3.viewmodels
+@model userviewmodel
+@{
+    ViewData["Title"] = "details";
+}
+<h1>@Model.firstname details</h1>
+<form asp-action="details">
+    <partial name="\partialviews\detailsdelete.cshtml"></partial>
+    <div class="mt-3">
+        <a aclass="btn-success" asp-action="Edit" asp-route-id="@Model.id"> Edit</a>
+        <a class=" btn btn-danger" asp-action="Index">cancel</a>
+
+    </div>
+</form>
+
+

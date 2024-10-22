@@ -8,10 +8,11 @@ using AutoMapper;
 using mvc3.viewmodels;
 using System.Reflection;
 using mvc3.utilities;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace mvc3.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly IUnitofwork _unitofwork;
@@ -21,45 +22,47 @@ namespace mvc3.Controllers
             _unitofwork = unitofwork;
             _mapper = mapper;
         }
-        public IActionResult Index(string ? searchvalue)
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(string ? searchvalue)
         {
             // ViewData["message"] = "hello view1";
             // ViewData["message"] = new employee { name = "yomna";
             // ViewBag.message = new employee { name = "mona" };
             var emp = Enumerable.Empty<employee>();
             if(string.IsNullOrEmpty(searchvalue))
-             emp = _unitofwork.employees.getallwithdepartment();
+             emp =  await _unitofwork.employees.getallwithdepartmentasync();
             else
-                emp = _unitofwork.employees.Getall(searchvalue);
+                emp =await _unitofwork.employees.Getallasync(searchvalue);
             var emp1 = _mapper.Map<IEnumerable<employee>,IEnumerable<Employeeviewmodel>>(emp);
             return View(emp1);
         }
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
 
         {
-            var department = _unitofwork.data.Getall();
+            var department =await _unitofwork.data.Getallasync();
             SelectList list = new SelectList(department,"id","name");
             ViewBag.department = list;
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Employeeviewmodel employeevm)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Employeeviewmodel employeevm)
         {
             if (!ModelState.IsValid) return View(employeevm);
             if(employeevm.image is not null)
             employeevm.imagename = documentsetting.updatefiles(employeevm.image, "images");
             var employee1 = _mapper.Map<Employeeviewmodel, employee>(employeevm);
-            _unitofwork.employees.create(employee1);
-            _unitofwork.SaveChanges();
+           await _unitofwork.employees.createasync(employee1);
+           await _unitofwork.SaveChangesasync();
             return RedirectToAction(nameof(Index));
 
 
         }
-        public IActionResult details(int? id) => Employeecontrollerhandler(id, nameof(details));
-        public IActionResult Edit(int? id) => Employeecontrollerhandler(id, nameof(Edit));
+        public async Task<IActionResult> details(int? id) =>await Employeecontrollerhandler(id, nameof(details));
+        public async Task<IActionResult> EditAsync(int? id) => await Employeecontrollerhandler(id, nameof(Edit));
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id , Employeeviewmodel employeevm)
+        public async Task<IActionResult> Edit([FromRoute] int id , Employeeviewmodel employeevm)
         {
             if (id != employeevm.Id) return BadRequest();
             if(ModelState.IsValid)
@@ -71,7 +74,7 @@ namespace mvc3.Controllers
                         employeevm.imagename = documentsetting.updatefiles(employeevm.image, "images");
                     var employee1 = _mapper.Map<Employeeviewmodel,employee>(employeevm);
                     _unitofwork.employees.update(employee1);
-                    if (_unitofwork.SaveChanges()> 0)
+                    if ( await _unitofwork.SaveChangesasync()> 0)
                         TempData["message"] = "update successfully";
 
                     
@@ -84,12 +87,13 @@ namespace mvc3.Controllers
             }
             return View(employeevm);
         }
-        public IActionResult Delete(int? id) => Employeecontrollerhandler(id, nameof(Delete));
+        public async  Task<IActionResult> Delete(int? id) =>await  Employeecontrollerhandler(id, nameof(Delete));
         [HttpPost, ActionName("Delete")]
-        public IActionResult confirmdelete(int ?id)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> confirmdelete(int ?id)
         {
             if (!id.HasValue) { return BadRequest(); }
-            var repo1 = _unitofwork.employees.Get(id.Value);
+            var repo1 = await _unitofwork.employees.Getasync(id.Value);
             if (repo1 is null) { return NotFound(); }
             else
             {
@@ -99,7 +103,7 @@ namespace mvc3.Controllers
                     {
 
                         _unitofwork.employees.delete(repo1);
-                        if(_unitofwork.SaveChanges()>0&&repo1.imagename is not null)
+                        if(await _unitofwork.SaveChangesasync()>0&&repo1.imagename is not null)
                            documentsetting.deletefiles("images" ,repo1.imagename);
                         return RedirectToAction(nameof(Index));
 
@@ -113,11 +117,11 @@ namespace mvc3.Controllers
                 return View(repo1);
             }
         }
-        private IActionResult Employeecontrollerhandler(int? id, string viewname)
+        private async Task<IActionResult> Employeecontrollerhandler(int? id, string viewname)
         {
             if (viewname == nameof(Edit))
             {
-                var department = _unitofwork.data.Getall();
+                var department =await  _unitofwork.data.Getallasync();
                 SelectList list = new SelectList(department, "id", "name");
                 ViewBag.department = list;
             }
@@ -127,7 +131,7 @@ namespace mvc3.Controllers
             }
             else
             {
-                var Employee = _unitofwork.employees.Get(id.Value);
+                var Employee = await _unitofwork.employees.Getasync(id.Value);
                 if (Employee is null)
                 {
                     return NotFound();

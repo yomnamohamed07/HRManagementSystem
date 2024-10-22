@@ -15,19 +15,18 @@ namespace Business_acess_lyer.repositories
             _datacontext = dbcontext;
             _dbset = dbcontext.Set<TEntity>();
         }
-        public TEntity? Get(int id)
-        {
-            return _dbset.Find(id);
-        }
-        public IEnumerable<TEntity> Getall()
-       
-             => _dbset.ToList();
+        public async Task<TEntity?> Getasync(int id)
+
+		   => await _dbset.FindAsync(id);
         
-        public void create(TEntity entity)
-        {
-            _dbset.Add(entity);
+        
+        public  async Task <IEnumerable<TEntity>> Getallasync()
+       
+             =>  await _dbset.ToListAsync();
+
+        public async Task createasync(TEntity entity) => await _dbset.AddAsync(entity); 
             
-        }
+        
         public void update(TEntity entity)
         {
             _dbset.Update(entity);

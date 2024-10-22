@@ -1,0 +1,31 @@
+﻿@using mvc3.viewmodels
+@model userviewmodel
+<div class="form-group">
+    <label asp-for="firstname"></label>
+    <input readonly class="form-control" asp-for="firstname" />
+    <span asp-validation-for="firstname" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="lastname"></label>
+    <input readonly class="form-control" asp-for="lastname" />
+    <span asp-validation-for="lastname" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="username"></label>
+    <input readonly class="form-control" asp-for="username" />
+    <span asp-validation-for="username" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="id"></label>
+    <input readonly class=form-control asp-for="id" />
+    <span asp-validation-for="id" class="text-danger"></span>
+
+</div>
+
+<div class="form-group">
+    <label asp-for="email"></label>
+    <input readonly class="form-control" asp-for="email" />
+    <span asp-validation-for="email" class="text-danger"></span>
+</div>
+
+

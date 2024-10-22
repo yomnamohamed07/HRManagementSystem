@@ -10,6 +10,6 @@ namespace Business_acess_lyer.interfaces
     {
         public IEmployee_repositories employees { get; }
         public Idata_repositories data { get;  }
-        public int SaveChanges();
+        public  Task<int> SaveChangesasync();
     }
 }

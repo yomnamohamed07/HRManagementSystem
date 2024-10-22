@@ -1,0 +1,17 @@
+﻿@model userviewmodel
+@{
+    ViewData["Title"] = "delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Delete @Model.firstname </h1>
+<form method="post" asp-action="delete">
+    <partial name="\partialviews\detailsdelete.cshtml"></partial>
+
+    <div class="mt-3">
+        <button class="btn-success" type="submit"> Delete </button>
+        <a class=" btn btn-danger" asp-action="Index">back</a>
+
+    </div>
+</form>
+
+

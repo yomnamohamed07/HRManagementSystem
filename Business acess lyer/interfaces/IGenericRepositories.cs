@@ -4,10 +4,10 @@ namespace Business_acess_lyer.interfaces
 {
     public interface IGenericRepositories<TEntity>
     {
-        void create(TEntity entity);
+        Task createasync(TEntity entity);
         void delete(TEntity entity);
-        TEntity Get(int id);
-        IEnumerable<TEntity> Getall();
+       Task< TEntity?> Getasync(int id);
+        Task <IEnumerable<TEntity>> Getallasync();
         void update (TEntity entity);
     }
 }
