@@ -29,7 +29,7 @@ namespace mvc3
             builder.Services.AddIdentity<applicationuser, IdentityRole>()
                 .AddEntityFrameworkStores<datacontextcs>()
                 .AddDefaultTokenProviders();
-            builder.Services.ConfigureApplicationCookie(c => { });
+            builder.Services.ConfigureApplicationCookie(c => { });// redirect to acount //asseccdenied path
            //this congigration the token
              builder.Services.AddAutoMapper(typeof(employeeprofile));
            builder.Services.AddScoped<Idata_repositories, data_repositories>();
