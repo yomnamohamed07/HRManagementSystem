@@ -33,10 +33,9 @@ namespace Business_acess_lyer.repositories
          
            
         }
-        public void delete(TEntity entity)
-        {
-            _dbset.Remove(entity);
-          
-        }
+        public void Delete(TEntity entity)
+           => _dbset.Remove(entity);
+
+     
     }
 }

@@ -8,7 +8,9 @@ namespace Data_access_lyer.models
 {
     public class applicationuser :IdentityUser
     {
-        public string firstname { get; set; }
+  
+        public string firstname{ get; set; }
+
         public string lastname { get; set; }
     }
 }
